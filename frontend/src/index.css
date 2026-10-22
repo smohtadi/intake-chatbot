@@ -1,0 +1,211 @@
+:root {
+  --color-background: hsl(0, 0%, 100%);
+  --color-foreground: hsl(0, 0%, 4%);
+  --color-hover: hsl(0, 0%, 96%);
+  --color-muted-foreground: hsl(0, 0%, 36%);
+
+  --color-card: hsl(0, 0%, 100%);
+  --color-card-foreground: hsl(0, 0%, 4%);
+  --color-card-hover: hsl(0, 0%, 96%);
+  --color-card-border: hsl(0, 0%, 92%);
+
+  --color-popover: hsl(0, 0%, 100%);
+  --color-popover-foreground: hsl(0, 0%, 4%);
+  --color-popover-hover: hsl(0, 0%, 96%);
+
+  --color-primary: hsl(222, 77%, 47%);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+  --color-primary-hover: hsl(222, 81%, 35%);
+  /* Primary as text on the page background (ghost/outline buttons). */
+  --color-primary-text: hsl(222, 77%, 47%);
+
+  --color-secondary: hsl(0, 0%, 96%);
+  --color-secondary-foreground: hsl(0, 0%, 9%);
+  --color-secondary-hover: hsl(0, 0%, 88%);
+
+  --color-accent: hsl(195, 63%, 38%);
+  --color-accent-foreground: hsl(0, 0%, 100%);
+  --color-accent-hover: hsl(195, 69%, 29%);
+
+  --color-danger: hsl(357, 100%, 45%);
+  --color-danger-foreground: hsl(0, 0%, 100%);
+  --color-danger-hover: hsl(357, 94%, 37%);
+
+  --color-border: hsl(0, 0%, 92%);
+
+  /* Border matches the input fill, so the fill alone marks the control;
+     placeholder keeps 4.5:1 against the input. */
+  --color-input-border: var(--color-input);
+  --color-input: hsl(0, 0%, 92%);
+  --color-input-foreground: hsl(0, 0%, 4%);
+  --color-input-placeholder: hsl(0, 0%, 36%);
+  --color-ring: hsl(223, 62%, 51%);
+
+  --color-sidebar: hsl(217, 78%, 15%);
+  --color-sidebar-foreground: hsl(0, 0%, 100%);
+  --color-sidebar-active: hsl(223, 62%, 51%);
+  --color-sidebar-active-foreground: hsl(0, 0%, 100%);
+  --color-sidebar-border: hsl(217, 78%, 15%);
+  --color-sidebar-hover: hsl(217, 83%, 25%);
+
+  --color-app-header: hsl(0, 0%, 100%);
+  --color-app-header-foreground: hsl(0, 0%, 4%);
+  --color-app-header-border: hsl(0, 0%, 92%);
+
+  --color-badge-danger: hsl(5, 86%, 97%);
+  --color-badge-danger-foreground: hsl(4, 74%, 49%);
+  --color-badge-danger-hover: hsl(5, 89%, 89%);
+  --color-badge-success: hsl(141, 84%, 93%);
+  --color-badge-success-foreground: hsl(144, 100%, 25%);
+  --color-badge-warning: hsl(44, 79%, 93%);
+  --color-badge-warning-foreground: #ffc107;
+  /* Text on --color-badge-warning (the demo banner); 4.5:1 or better. */
+  --color-warning-text: hsl(36, 100%, 22%);
+
+  --color-tablerow-default: hsl(0, 0%, 100%);
+  --color-tablerow-danger: hsl(0, 93%, 94%);
+  --color-tablerow-danger-border: hsl(0, 100%, 84%);
+  --color-tablerow-warning: hsl(48, 96%, 89%);
+  --color-tablerow-warning-border: hsl(48, 100%, 76%);
+
+  --color-dot-danger: hsl(4, 74%, 49%);
+  --color-dot-warning: hsl(45, 100%, 51%);
+  --color-dot-success: hsl(144, 100%, 25%);
+
+  --fs-base: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-h1: calc(var(--fs-base) * 3);
+  --fs-h2: calc(var(--fs-base) * 2);
+  --fs-h3: calc(var(--fs-base) * 1.5);
+  --fs-h4: calc(var(--fs-base) * 1.25);
+
+  --height-app-header: 4rem;
+  --radius: 0.5rem;
+
+  --shadow: 0 1px 3px 0 hsla(0, 0%, 0%, 0.2),
+    0 1px 2px -1px hsla(0, 0%, 0%, 0.2);
+
+  --tracking-tight: -0.025em;
+
+  --width-sidebar: 16rem;
+  --width-sidebar-mini: 5rem;
+
+  --width-container: 80rem;
+
+  --z-dropdown: 70;
+}
+
+.dark {
+  --color-background: hsl(0, 0%, 4%);
+  --color-foreground: hsl(0, 0%, 98%);
+  --color-hover: hsl(0, 0%, 10%);
+  --color-muted-foreground: hsl(0, 0%, 65%);
+
+  --color-card: hsl(0, 0%, 9%);
+  --color-card-foreground: hsl(0, 0%, 98%);
+  --color-card-hover: hsl(0, 0%, 20%);
+
+  --color-popover: hsl(0, 0%, 9%);
+  --color-popover-foreground: hsl(0, 0%, 98%);
+  --color-popover-hover: hsl(0, 0%, 20%);
+
+  --color-primary: hsl(222, 77%, 47%);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+  --color-primary-hover: hsl(222, 81%, 35%);
+  --color-primary-text: hsl(222, 90%, 72%);
+
+  --color-secondary: hsl(0, 0%, 15%);
+  --color-secondary-foreground: hsl(0, 0%, 98%);
+  --color-secondary-hover: hsl(0, 0%, 23%);
+
+  /* Dark foregrounds: white on these light fills is under 3:1. */
+  --color-accent: hsl(212, 100%, 66%);
+  --color-accent-foreground: hsl(0, 0%, 4%);
+  --color-accent-hover: hsl(221, 100%, 60%);
+
+  --color-danger: hsl(359, 100%, 70%);
+  --color-danger-foreground: hsl(0, 0%, 4%);
+  --color-danger-hover: hsl(359, 100%, 60%);
+
+  --color-border: hsla(0, 0%, 100%, 0.1);
+
+  --color-input-border: var(--color-input);
+  --color-input: hsla(0, 0%, 100%, 0.15);
+  --color-input-foreground: hsl(0, 0%, 98%);
+  --color-input-placeholder: hsl(0, 0%, 65%);
+  --color-ring: hsl(223, 62%, 51%);
+
+  --color-sidebar: hsl(217, 78%, 15%);
+  --color-sidebar-foreground: hsl(0, 0%, 100%);
+  --color-sidebar-active: hsl(223, 62%, 51%);
+  --color-sidebar-active-foreground: hsl(0, 0%, 100%);
+  --color-sidebar-border: hsl(217, 78%, 15%);
+  --color-sidebar-hover: hsl(217, 83%, 25%);
+
+  --color-app-header: hsl(0, 0%, 9%);
+  --color-app-header-foreground: hsl(0, 0%, 98%);
+  --color-app-header-border: hsla(0, 0%, 100%, 0.1);
+
+  --color-badge-danger: hsla(4, 86%, 58%, 0.15);
+  --color-badge-danger-foreground: hsl(4, 86%, 58%);
+  --color-badge-success: hsla(144, 100%, 39%, 0.15);
+  --color-badge-success-foreground: hsl(144, 100%, 39%);
+
+  --color-dot-danger: hsl(4, 86%, 58%);
+  --color-dot-warning: hsl(45, 100%, 60%);
+
+  --color-badge-warning: hsla(45, 100%, 51%, 0.15);
+  --color-warning-text: hsl(45, 100%, 70%);
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  line-height: 1.5;
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+}
+
+a {
+  color: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.container {
+  max-width: var(--width-container);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}

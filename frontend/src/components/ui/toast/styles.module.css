@@ -1,0 +1,59 @@
+.region {
+  margin-block-end: 1rem;
+  /* Reserve enough vertical space: top toast height + offset for each card behind */
+  min-height: calc(3.5rem + var(--toast-count, 1) * 0.45rem);
+  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.toast {
+  align-items: flex-start;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-danger);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  left: 0;
+  padding: 0.75rem;
+  position: absolute;
+  right: 0;
+  /* Cards behind the top toast are shifted down and scaled slightly smaller */
+  top: calc(var(--toast-index, 0) * 0.4rem);
+  transform:
+    scale(calc(1 - var(--toast-index, 0) * 0.03))
+    translateY(calc(var(--toast-index, 0) * 0.3rem));
+  transform-origin: top center;
+  transition: transform 200ms ease, top 200ms ease;
+  /* Front toast has highest z-index */
+  z-index: calc(10 - var(--toast-index, 0));
+  /* Toasts behind the front are visually dimmed */
+  opacity: calc(1 - var(--toast-index, 0) * 0.12);
+}
+
+.content {
+  min-width: 0;
+}
+
+.title {
+  color: var(--color-foreground);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+.message {
+  color: var(--color-foreground);
+  font-size: var(--fs-sm);
+  opacity: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.dismissButton {
+  color: var(--color-foreground);
+  flex-shrink: 0;
+  padding: 0.2rem;
+}

@@ -1,0 +1,11 @@
+.main {
+  margin-inline: auto;
+  max-width: var(--width-container);
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .main {
+    padding: 1rem 0.75rem;
+  }
+}

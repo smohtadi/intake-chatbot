@@ -1,0 +1,27 @@
+.loader {
+  align-items: center;
+  color: var(--color-muted-foreground);
+  display: inline-flex;
+  font-size: var(--fs-sm);
+  gap: 0.5rem;
+}
+
+.icon {
+  animation: spin 1s linear infinite;
+  block-size: 1.25em;
+  flex-shrink: 0;
+  inline-size: 1.25em;
+}
+
+/* Slower rather than still, so it still reads as "working". */
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    animation-duration: 3s;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}

@@ -1,0 +1,6 @@
+.card {
+  background-color: var(--color-card);
+  border-radius: var(--radius);
+  color: var(--color-card-foreground);
+  box-shadow: var(--shadow);
+}

@@ -1,0 +1,37 @@
+.header {
+  align-items: center;
+  background-color: var(--color-app-header);
+  border-bottom: 1px solid var(--color-app-header-border);
+  color: var(--color-app-header-foreground);
+  display: flex;
+  height: var(--height-app-header);
+  justify-content: space-between;
+  padding-inline: 1rem;
+}
+
+.brand {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.headerBtn {
+  color: var(--color-app-header-foreground);
+}
+
+.brandName {
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.userInfo {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
