@@ -15,13 +15,10 @@ declare module "axios" {
 }
 
 const API_ERROR_MESSAGES: Record<string, string> = {
-  RATE_LIMITED: "Too many sign-in attempts. Please wait 15 minutes and try again.",
+  RATE_LIMITED: "Too many requests. Please wait a few minutes and try again.",
   LLM_ERROR: "The assistant is unavailable right now. Please try again.",
-  TURN_LIMIT_REACHED: "This intake reached its message limit. Please start a new intake.",
-  TURN_IN_PROGRESS: "Please wait for the assistant to reply.",
-  SESSION_NOT_FOUND: "This intake has expired. Please start a new intake.",
-  INTAKE_INCOMPLETE: "The intake is not complete yet.",
-  ALREADY_SUBMITTED: "This intake was already submitted.",
+  SPECIALIST_NOT_FOUND: "This specialist no longer exists.",
+  VALIDATION_ERROR: "Some fields are invalid. Please check them and try again.",
 };
 
 export function getApiErrorMessage(title: unknown): string | undefined {

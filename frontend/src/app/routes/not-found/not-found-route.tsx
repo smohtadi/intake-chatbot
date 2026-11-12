@@ -10,7 +10,7 @@ export default function NotFound() {
         The requested page does not exist or has been moved.
       </p>
       <p style={{ marginTop: "0.75rem" }}>
-        <Link to={paths.intake.getHref()}>Return to the intake</Link>
+        <Link to={paths.home.getHref()}>Return home</Link>
       </p>
     </Card>
   );

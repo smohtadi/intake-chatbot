@@ -16,7 +16,7 @@ function renderApp(route: string) {
         path="/"
         element={
           <ProtectedRoute fallback={<Navigate to="/login" replace />}>
-            <p>Intake page</p>
+            <p>Assistant page</p>
           </ProtectedRoute>
         }
       />
@@ -31,7 +31,6 @@ describe("login", () => {
     renderApp("/");
     expect(await screen.findByRole("button", { name: "Sign in" })).toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent("/login");
-    expect(screen.getByRole("note")).toHaveTextContent("Demo only");
   });
 
   it("shows an inline error for wrong credentials", async () => {
@@ -50,13 +49,13 @@ describe("login", () => {
     expect(await screen.findAllByText("This field is required")).toHaveLength(2);
   });
 
-  it("opens the intake after a successful sign in", async () => {
+  it("opens the assistant after a successful sign in", async () => {
     db.user = null;
     const { user } = renderApp("/login");
     await user.type(await screen.findByLabelText("Username"), "demo");
     await user.type(screen.getByLabelText("Password"), DEMO_PASSWORD);
     await user.click(screen.getByRole("button", { name: "Sign in" }));
-    expect(await screen.findByText("Intake page")).toBeInTheDocument();
+    expect(await screen.findByText("Assistant page")).toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
   });
 

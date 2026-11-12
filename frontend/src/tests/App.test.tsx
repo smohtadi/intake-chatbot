@@ -16,7 +16,7 @@ describe("UI foundations", () => {
     );
 
     expect(screen.getByText(/page not found/i)).toBeTruthy();
-    expect(screen.getByText(/return to the intake/i)).toBeTruthy();
+    expect(screen.getByText(/return home/i)).toBeTruthy();
   });
 
   it("renders error route fallback", () => {

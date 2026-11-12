@@ -13,11 +13,12 @@
   --color-popover-foreground: hsl(0, 0%, 4%);
   --color-popover-hover: hsl(0, 0%, 96%);
 
-  --color-primary: hsl(222, 77%, 47%);
-  --color-primary-foreground: hsl(0, 0%, 100%);
-  --color-primary-hover: hsl(222, 81%, 35%);
+  /* Lime fill with dark text: white on this green is under 3:1. */
+  --color-primary: hsl(84, 50%, 54%);
+  --color-primary-foreground: hsl(90, 45%, 12%);
+  --color-primary-hover: hsl(84, 48%, 46%);
   /* Primary as text on the page background (ghost/outline buttons). */
-  --color-primary-text: hsl(222, 77%, 47%);
+  --color-primary-text: hsl(86, 55%, 26%);
 
   --color-secondary: hsl(0, 0%, 96%);
   --color-secondary-foreground: hsl(0, 0%, 9%);
@@ -49,8 +50,23 @@
   --color-sidebar-hover: hsl(217, 83%, 25%);
 
   --color-app-header: hsl(0, 0%, 100%);
-  --color-app-header-foreground: hsl(0, 0%, 4%);
+  --color-app-header-foreground: hsl(90, 45%, 14%);
   --color-app-header-border: hsl(0, 0%, 92%);
+
+  --color-hero: hsl(78, 55%, 92%);
+  --color-hero-foreground: hsl(90, 45%, 12%);
+  --color-hero-muted: hsl(90, 12%, 40%);
+  /* Large text only (3:1 with white). */
+  --color-highlight: hsl(84, 45%, 38%);
+  --color-highlight-foreground: hsl(0, 0%, 100%);
+  /* Photo tiles: placeholder fills, the dark scrim under the caption, and caption text. */
+  --color-tile-1: hsl(95, 30%, 32%);
+  --color-tile-2: hsl(150, 22%, 30%);
+  --color-tile-3: hsl(70, 28%, 34%);
+  --color-tile-scrim: hsla(95, 45%, 10%, 0.92);
+  --color-tile-foreground: hsl(0, 0%, 100%);
+  --color-tile-accent: hsl(84, 60%, 66%);
+  --color-backdrop: hsla(90, 45%, 10%, 0.25);
 
   --color-badge-danger: hsl(5, 86%, 97%);
   --color-badge-danger-foreground: hsl(4, 74%, 49%);
@@ -72,8 +88,10 @@
   --color-dot-warning: hsl(45, 100%, 51%);
   --color-dot-success: hsl(144, 100%, 25%);
 
-  --fs-base: 1rem;
-  --fs-sm: 0.875rem;
+  --font-serif: "Source Serif 4", Georgia, serif;
+
+  --fs-base: 0.875rem;
+  --fs-sm: 0.75rem;
   --fs-h1: calc(var(--fs-base) * 3);
   --fs-h2: calc(var(--fs-base) * 2);
   --fs-h3: calc(var(--fs-base) * 1.5);
@@ -93,6 +111,7 @@
   --width-container: 80rem;
 
   --z-dropdown: 70;
+  --z-chat-launcher: 60;
 }
 
 .dark {
@@ -178,7 +197,7 @@ body {
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
   font-size: var(--fs-base);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.5;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */

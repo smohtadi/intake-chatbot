@@ -1,6 +1,5 @@
 import { randomBytes } from "node:crypto";
 import { config } from "../config";
-import { collection } from "../shared/db";
 import { UnauthorizedError } from "../shared/errors";
 import { verifyPassword } from "./auth-password";
 
@@ -9,7 +8,7 @@ const TOKEN_BYTES = 32;
 
 type AuthToken = { username: string; expiresAt: number };
 
-const authTokens = () => collection<AuthToken>("authTokens");
+const authTokens = new Map<string, AuthToken>();
 
 /** Returns a new session token. Both checks always run so failures take the same time. */
 export const login = async (username: string, password: string): Promise<string> => {
@@ -18,25 +17,25 @@ export const login = async (username: string, password: string): Promise<string>
     throw new UnauthorizedError("INVALID_CREDENTIALS");
   }
   const token = randomBytes(TOKEN_BYTES).toString("hex");
-  authTokens().set(token, { username, expiresAt: Date.now() + TOKEN_TTL_MS });
+  authTokens.set(token, { username, expiresAt: Date.now() + TOKEN_TTL_MS });
   return token;
 };
 
 export const findUsernameByToken = (token: string | undefined): string => {
-  const entry = token ? authTokens().get(token) : undefined;
+  const entry = token ? authTokens.get(token) : undefined;
   if (!token || !entry || entry.expiresAt <= Date.now()) {
-    if (token) authTokens().delete(token);
+    if (token) authTokens.delete(token);
     throw new UnauthorizedError();
   }
   return entry.username;
 };
 
 export const revokeToken = (token: string | undefined): void => {
-  if (token) authTokens().delete(token);
+  if (token) authTokens.delete(token);
 };
 
 export const deleteExpiredTokens = (now = Date.now()): void => {
-  for (const [token, entry] of authTokens()) {
-    if (entry.expiresAt <= now) authTokens().delete(token);
+  for (const [token, entry] of authTokens) {
+    if (entry.expiresAt <= now) authTokens.delete(token);
   }
 };

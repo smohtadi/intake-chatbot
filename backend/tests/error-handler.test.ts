@@ -19,6 +19,12 @@ describe("errorHandler", () => {
     expect(res.body).toEqual({ status: 400, title: "NOPE" });
   });
 
+  it("returns 413 for oversized bodies", async () => {
+    const tooLarge = Object.assign(new Error("request entity too large"), { status: 413 });
+    const res = await request(appThatThrows(tooLarge)).get("/").expect(413);
+    expect(res.body).toEqual({ status: 413, title: "PAYLOAD_TOO_LARGE" });
+  });
+
   it("hides unexpected errors behind a 500", async () => {
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     const res = await request(appThatThrows(new Error("db exploded"))).get("/").expect(500);

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-See README.md first. *Project structure* maps every folder and *Data flow* shows how a request travels. The intake feature (`app/routes/intake`, `features/intake`, `store/intake`) is the reference implementation.
+See README.md first. *Project structure* maps every folder and *Data flow* shows how a request travels. The specialists feature (`app/routes/specialists`, `features/specialists`, `store/specialists`) is the reference implementation for list/edit pages. The chat is `app/chat-widget` + `store/match/chat-slice` + `features/match`.
 
 ## Commands
 

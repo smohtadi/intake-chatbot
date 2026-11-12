@@ -1,0 +1,111 @@
+.hero {
+  background-color: var(--color-hero);
+  color: var(--color-hero-foreground);
+  min-height: calc(100dvh - var(--height-app-header));
+  padding: 4rem 1rem 3rem;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+}
+
+.highlight {
+  background-color: var(--color-highlight);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  color: var(--color-highlight-foreground);
+  display: inline-block;
+  padding: 0 0.3em 0.05em 0.2em;
+}
+
+.subtitle {
+  color: var(--color-hero-muted);
+  font-size: var(--fs-h4);
+  margin-block: 1.5rem 3rem;
+}
+
+.tiles {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  list-style: none;
+  margin-inline: auto;
+  max-width: 100rem;
+}
+
+.tile {
+  aspect-ratio: 3 / 5;
+  background-color: var(--color-tile-1);
+  border-radius: 1rem;
+  color: var(--color-tile-foreground);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  position: relative;
+}
+
+.tiles li:nth-child(3n + 2) .tile {
+  background-color: var(--color-tile-2);
+}
+
+.tiles li:nth-child(3n) .tile {
+  background-color: var(--color-tile-3);
+}
+
+.tileIcon {
+  height: 40%;
+  left: 50%;
+  opacity: 0.18;
+  position: absolute;
+  top: 12%;
+  transform: translateX(-50%);
+  width: 60%;
+}
+
+.tileCaption {
+  align-items: center;
+  background-image: linear-gradient(to top, var(--color-tile-scrim) 45%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 5rem 1rem 1.75rem;
+  position: relative;
+}
+
+.tileTitle {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.tileSubtitle {
+  font-size: var(--fs-sm);
+  margin-block-end: 1rem;
+}
+
+.pill {
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 2.5rem;
+  }
+
+  .subtitle {
+    margin-block: 1rem 2rem;
+  }
+
+  .tile {
+    aspect-ratio: 4 / 3;
+  }
+}

@@ -3,3 +3,22 @@
   width: 40px;
   max-width: 100%;
 }
+
+.disc {
+  fill: var(--color-hero);
+}
+
+.stem {
+  fill: none;
+  stroke: var(--color-primary-text);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.leafBack {
+  fill: var(--color-primary);
+}
+
+.leafFront {
+  fill: var(--color-primary-text);
+}

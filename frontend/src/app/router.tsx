@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { paths } from "@/config/paths";
 
 import AppLayout from "@/components/layout/app-layout/app-layout";
@@ -6,7 +6,10 @@ import ErrorBoundaryRoute from "@/app/routes/errors/error-boundary-route";
 import ProtectedRoute from "@/app/routes/protected/protected-route";
 import NotFoundRoute from "@/app/routes/not-found/not-found-route";
 import LoginRoute from "@/app/routes/login/login-route";
-import IntakeRoute from "@/app/routes/intake/intake-route";
+import ChatWidget from "@/app/chat-widget/chat-widget";
+import HomeRoute from "@/app/routes/home/home-route";
+import TeamRoute from "@/app/routes/specialists/team-route";
+import SpecialistEditRoute from "@/app/routes/specialists/specialist-edit-route";
 
 const router = createBrowserRouter([
   {
@@ -14,15 +17,20 @@ const router = createBrowserRouter([
     element: <LoginRoute />,
   },
   {
-    path: paths.intake.path,
     element: (
       <ProtectedRoute fallback={<Navigate to={paths.login.getHref()} replace />}>
         <AppLayout>
-          <IntakeRoute />
+          <Outlet />
+          <ChatWidget />
         </AppLayout>
       </ProtectedRoute>
     ),
     ErrorBoundary: ErrorBoundaryRoute,
+    children: [
+      { path: paths.home.path, element: <HomeRoute /> },
+      { path: paths.team.path, element: <TeamRoute /> },
+      { path: paths.specialistEdit.path, element: <SpecialistEditRoute /> },
+    ],
   },
   { path: "*", element: <NotFoundRoute /> },
 ]);

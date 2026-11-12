@@ -35,3 +35,45 @@
   font-size: var(--fs-sm);
   font-weight: 500;
 }
+
+.nav {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-inline: 2rem;
+}
+
+.navLink {
+  border-bottom: 2px solid transparent;
+  color: var(--color-app-header-foreground);
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: var(--color-primary-text);
+}
+
+.navLinkActive {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.bookButton {
+  border-radius: 999px;
+  font-weight: 600;
+  padding-inline: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .nav {
+    margin-inline-start: 0.5rem;
+  }
+
+  .userInfo,
+  .bookButton {
+    display: none;
+  }
+}

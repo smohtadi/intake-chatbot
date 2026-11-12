@@ -1,0 +1,48 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem auto;
+  max-width: min(48rem, calc(100% - 2rem));
+  padding: 1.25rem;
+}
+
+.title {
+  font-size: var(--fs-h3);
+}
+
+.team {
+  margin-inline: auto;
+  max-width: 72rem;
+  padding: 3rem 1rem;
+}
+
+.teamTitle {
+  color: var(--color-hero-foreground);
+  font-family: var(--font-serif);
+  font-size: var(--fs-h1);
+  font-weight: 500;
+  margin-block-end: 2rem;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  list-style: none;
+}
+
+@media (max-width: 640px) {
+  .team {
+    padding-block: 2rem;
+  }
+
+  .teamTitle {
+    font-size: var(--fs-h2);
+  }
+
+  .grid {
+    gap: 1rem;
+  }
+}

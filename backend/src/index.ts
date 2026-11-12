@@ -1,26 +1,23 @@
 import { createApp } from "./app";
 import { deleteExpiredTokens } from "./auth/auth-service";
 import { config } from "./config";
-import { deleteIdleSessions } from "./session/session-service";
 import { connectDb, disconnectDb } from "./shared/db";
+import { embedMissingSpecialists } from "./specialist/specialist-service";
 
 const CLEANUP_INTERVAL_MS = 10 * 60 * 1000;
 
 const start = async () => {
   await connectDb(config.DATABASE_URL);
-
-  const server = createApp().listen(config.PORT, () => {
-    console.log(`Listening on port ${config.PORT} (${config.NODE_ENV})`);
+  embedMissingSpecialists().catch((error: unknown) => {
+    console.error("Embedding specialists failed:", error instanceof Error ? error.message : error);
   });
 
-  const cleanupTimer = setInterval(() => {
-    deleteIdleSessions();
-    deleteExpiredTokens();
-  }, CLEANUP_INTERVAL_MS);
+  const server = createApp().listen(config.PORT);
+
+  const cleanupTimer = setInterval(deleteExpiredTokens, CLEANUP_INTERVAL_MS);
   cleanupTimer.unref();
 
-  const shutdown = (signal: string) => {
-    console.log(`${signal} received, shutting down`);
+  const shutdown = () => {
     clearInterval(cleanupTimer);
     server.close(async () => {
       await disconnectDb();

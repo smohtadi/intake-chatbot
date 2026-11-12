@@ -16,6 +16,10 @@ export const errorHandler = (
     return res.status(400).json({ status: 400, title: "INVALID_JSON" });
   }
 
+  if (err instanceof Error && "status" in err && err.status === 413) {
+    return res.status(413).json({ status: 413, title: "PAYLOAD_TOO_LARGE" });
+  }
+
   console.error(err);
   res.status(500).json({ status: 500, title: "INTERNAL_SERVER_ERROR" });
 };

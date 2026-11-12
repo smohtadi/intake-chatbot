@@ -29,7 +29,8 @@ Shared code is in `src/shared/` (`db.ts`, `errors/`, `middleware/`, `utils/`). M
 ## Rules
 
 - **No repository layer.** Services call the database directly. Don't add `*-repository.ts` files or generic data abstractions.
-- **`src/shared/db.ts` is the only place that knows the database driver** (connect, disconnect and reset). The template default is in-memory.
+- **`src/shared/db.ts` is the only place that knows the database driver** (connect, migrate, transaction, disconnect and reset). It uses PostgreSQL + pgvector via `pg`.
+- **`src/shared/ai.ts` is the only place that imports LangChain or Voyage.** Tests mock it with `vi.mock`.
 - **Validate at the route** with `validate({ body, params, query })`. Type controller `Request` generics with the matching `z.infer` types. Don't re-validate in controllers.
 - In Zod 4, `.partial()` keeps `.default()` values. Build update schemas from the raw fields, not from the create schema.
 - **Errors:** throw `NotFoundError`, `BadRequestError` or a new `AppError` subclass from `src/shared/errors/`. Never send 4xx/5xx manually from controllers. Express 5 forwards async errors, so you don't need `try/catch` or an async wrapper.

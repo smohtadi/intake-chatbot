@@ -6,7 +6,6 @@ import Button from "@/components/ui/button/button";
 import Card from "@/components/ui/card/card";
 import Form from "@/components/ui/form/form";
 import Loader from "@/components/ui/loader/loader";
-import DemoBanner from "@/components/demo-banner/demo-banner";
 import { paths } from "@/config/paths";
 import { site } from "@/config/site";
 import { loginSchema, type ILoginForm } from "@/schemas/auth-schema";
@@ -26,7 +25,7 @@ export default function LoginRoute() {
   });
 
   // After login, /me is re-fetched and `user` appears, which redirects here.
-  if (user) return <Navigate to={paths.intake.getHref()} replace />;
+  if (user) return <Navigate to={paths.home.getHref()} replace />;
   if (loading) return <Loader />;
 
   const onSubmit = async (form: ILoginForm) => {
@@ -41,7 +40,6 @@ export default function LoginRoute() {
   return (
     <>
       <title>{paths.login.getDocTitle()}</title>
-      <DemoBanner />
       <Card as="main" className={styles.card}>
         <h1 className={styles.title}>{site.name}</h1>
         <Form onSubmit={handleSubmit(onSubmit)} noValidate>

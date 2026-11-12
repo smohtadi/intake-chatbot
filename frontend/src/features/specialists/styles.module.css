@@ -1,0 +1,101 @@
+.group {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.legend {
+  font-weight: 500;
+  margin-block-end: 0.5rem;
+  padding: 0;
+}
+
+.options {
+  display: grid;
+  gap: 0.5rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.teamCard {
+  aspect-ratio: 3 / 4;
+  background-color: var(--color-tile-1);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  color: var(--color-tile-foreground);
+  display: block;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+  transition: transform 150ms ease-in-out;
+}
+
+.teamCard:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .teamCard:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.photo {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.monogram {
+  align-items: center;
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  inset: 0;
+  justify-content: center;
+  opacity: 0.35;
+  padding-bottom: 4rem;
+  position: absolute;
+}
+
+.caption {
+  background-image: linear-gradient(to top, var(--color-tile-scrim) 35%, transparent);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  inset-inline: 0;
+  padding: 4rem 1.5rem 1.5rem;
+  position: absolute;
+}
+
+.teamName {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h4);
+  font-weight: 500;
+}
+
+.teamRole {
+  color: var(--color-tile-accent);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
