@@ -2,7 +2,7 @@
 
 React + Vite app for the psychology centre demo.
 - **Home (`/`):** a hero with six support tiles. Each tile's "Get started" opens the chat.
-- **Chat widget (every page):** a floating "Find a specialist" button opens a chat modal. It asks three questions and shows matching specialists, each with a "Book on Jane" link and a profile link.
+- **Chat widget (every page):** the chat modal opens by itself on the first visit in a tab, and a floating "Find a specialist" button reopens it. It asks two questions and shows matching specialists, each with a "Book on Jane" link and a profile link.
 - **Our Team (`/team`):** photo cards for the roster. Each card opens the edit view.
 
 See [`../docs/system-design.md`](../docs/system-design.md) for the spec and [`../backend/README.md`](../backend/README.md) for the API.
@@ -17,11 +17,11 @@ React 19, React Router 7, Redux Toolkit Query over axios, react-hook-form + zod,
 
 - **`/login`:** username, password, and an inline error for wrong credentials.
 - **Header nav** (signed in): "Home" and "Our Team", a "Book a call" button that opens the chat, the username and Log out.
-- **`/` Home:** "Ready to feel better?" and six tiles (Individual, Children & Teens, Couples, Family, Assessment, Executive Coaching). Tiles use colour placeholders with an icon until real images exist. "Children & Teens" also answers the children/youth question with "Yes" when the chat reaches it.
-- **Chat widget:** a native `<dialog>` opened with `showModal()` (focus trap, Escape closes it), bottom right on desktop and full screen on phones. Its state lives in the Redux `chat` slice, so the conversation survives closing the widget and changing pages, until a reload or the **Start over** icon (↺) next to the close button. There are no start-over quick replies, so the input stays open after each answer.
-  1. "Do you prefer a specific associate?" The visitor can type a name or click **No preference**. Typos are tolerated. If anyone matches, the chat shows their cards and ends; the header's ↺ icon restarts it. Otherwise it continues.
-  2. "Are you looking for counselling for children/youth?" with **Yes** and **No** buttons.
-  3. "Briefly describe what you're looking for." This and every follow-up go to the LLM. The reply shows cards under it.
+- **`/` Home:** "Ready to feel better?" and six tiles (Individual, Children & Teens, Couples, Family, Assessment, Executive Coaching). Tiles use colour placeholders with an icon until real images exist. "Children & Teens" also answers the children/youth question with "Yes" if it hasn't been answered yet.
+- **Chat widget:** a native `<dialog>` opened with `showModal()` (focus trap; Escape or a backdrop click closes it), bottom right on desktop and full screen on phones. Its state lives in the Redux `chat` slice, so the conversation survives closing the widget and changing pages, until a reload or the **Start over** icon (↺) next to the close button. There are no start-over quick replies, so the input stays open after each answer.
+  - Opens by itself once per browser tab: a `chat-auto-opened` flag in `sessionStorage` stops it reopening after the visitor closes it.
+  1. After a greeting, "Are you looking for counselling for children/youth?" with **Yes** and **No** buttons.
+  2. "Briefly describe what you're looking for." This and every follow-up go to the LLM. The reply shows cards under it.
   - The thread lives only in component state and is sent in full with each request. Nothing is stored on the server.
   - LLM failures appear inline with **Retry**, which resends the same text. Text that looks like a card or ID number shows a warning, but isn't blocked.
 - **`/team`:** a card per specialist with photo, name and role. Without a photo, the card shows their initials.
@@ -44,7 +44,7 @@ src/
 ├── components/              ui primitives, layout (app-header with nav), logo
 ├── store/
 │   ├── auth/                authApi, AuthProvider, useAuth
-│   ├── match/               match-api (findAssociate, match), chat-slice (steps, thread, sendChatMessage thunk)
+│   ├── match/               match-api (match), chat-slice (steps, thread, sendChatMessage thunk)
 │   └── specialists/         getSpecialists, getSpecialistOptions, getSpecialist, updateSpecialist
 ├── schemas/                 auth, match (API types), specialist (API types + form schema)
 ├── config/, hooks/, lib/
@@ -56,7 +56,7 @@ Imports flow one way: `app/routes` → `features` → `store` / `schemas` → `l
 ## Data flow
 
 ```
-ChatWidget ── chat slice ── sendChatMessage thunk ── matchApi.findAssociate / match → /api/match
+ChatWidget ── chat slice ── sendChatMessage thunk ── matchApi.match → /api/match
    └─ ChatPane, ChatChoices, SpecialistCard (props in, callbacks out)
 HomeRoute, AppHeader "Book a call" ── dispatch(chatOpened)
 TeamRoute / SpecialistEditRoute ── specialistApi (tags: item + LIST) → /api/specialists
@@ -74,7 +74,7 @@ npm ci
 npm run dev      # http://localhost:5173, proxies /api to the backend on :3000
 ```
 
-Start the backend too (see its README). To run without a backend, set `VITE_APP_ENABLE_API_MOCKING=true` in `.env` and run `npx msw init public` once. The mock user is `demo` / `demo-password`. The mock associate lookup matches substrings, and the mock assistant returns every specialist that fits the children/youth answer.
+Start the backend too (see its README). To run without a backend, set `VITE_APP_ENABLE_API_MOCKING=true` in `.env` and run `npx msw init public` once. The mock user is `demo` / `demo-password`. The mock assistant returns every specialist that fits the children/youth answer.
 
 | Script | What it does |
 | --- | --- |

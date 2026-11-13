@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 import { MessageCircleIcon, RotateCcwIcon, XIcon } from "lucide-react";
 import Button from "@/components/ui/button/button";
 import ChatChoices from "@/features/match/chat-choices";
@@ -17,24 +17,42 @@ import { useAppSelector } from "@/store/useAppSelector";
 import styles from "@/app/chat-widget/styles.module.css";
 
 const TITLE = "Find a specialist";
+const AUTO_OPENED_KEY = "chat-auto-opened";
 
 const CHOICES_BY_STEP: Record<ChatStep, readonly string[]> = {
-  associate: [CHOICES.noPreference],
   childYouth: [CHOICES.yes, CHOICES.no],
   describe: [],
   chat: [],
   done: [],
 };
 
-const STEPS_WITH_INPUT: readonly ChatStep[] = ["associate", "describe", "chat"];
+const STEPS_WITH_INPUT: readonly ChatStep[] = ["describe", "chat"];
 
-/** Floating button that opens the specialist-matching chat in a modal. The chat lives in the store, so it survives closing and navigation. */
+/** True only the first time it's called in this browser tab. Storage can be blocked, which counts as the first time. */
+function isFirstVisitInTab() {
+  try {
+    if (sessionStorage.getItem(AUTO_OPENED_KEY)) return false;
+    sessionStorage.setItem(AUTO_OPENED_KEY, "1");
+  } catch {
+    // Private mode or blocked storage: open anyway.
+  }
+  return true;
+}
+
+/**
+ * Floating button plus the specialist-matching chat in a modal. Opens by itself once per tab.
+ * The chat lives in the store, so it survives closing and navigation.
+ */
 export default function ChatWidget() {
   const dispatch = useAppDispatch();
   const chat = useAppSelector((state) => state.chat);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const isWaiting = chat.pendingRequestId !== null;
   const choices = CHOICES_BY_STEP[chat.step];
+
+  useEffect(() => {
+    if (isFirstVisitInTab()) dispatch(chatOpened());
+  }, [dispatch]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -44,6 +62,10 @@ export default function ChatWidget() {
 
   const close = () => dispatch(chatClosed());
   const startOver = () => dispatch(startedOver());
+  /** The dialog has no padding, so a click whose target is the dialog itself landed on the backdrop. */
+  const closeOnBackdrop = (event: MouseEvent<HTMLDialogElement>) => {
+    if (event.target === event.currentTarget) close();
+  };
 
   return (
     <>
@@ -51,7 +73,7 @@ export default function ChatWidget() {
         <MessageCircleIcon aria-hidden="true" />
         {TITLE}
       </Button>
-      <dialog ref={dialogRef} className={styles.dialog} aria-labelledby="chat-title" onClose={close}>
+      <dialog ref={dialogRef} className={styles.dialog} aria-labelledby="chat-title" onClose={close} onClick={closeOnBackdrop}>
         <header className={styles.header}>
           <h2 id="chat-title" className={styles.title}>
             {TITLE}

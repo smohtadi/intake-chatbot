@@ -35,9 +35,5 @@ export interface IMatchResponse {
   specialists: ISpecialistCard[];
 }
 
-export interface IAssociateResponse {
-  specialists: ISpecialistCard[];
-}
-
 /** Matches the backend's limit on one request's thread. */
 export const MAX_THREAD_MESSAGES = 20;

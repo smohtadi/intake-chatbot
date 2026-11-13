@@ -6,7 +6,7 @@ import { server } from "@/tests/mocks/server";
 import { MOCK_REPLY } from "@/tests/mocks/handlers";
 import { renderWithProviders } from "@/tests/test-utils";
 import ChatWidget from "@/app/chat-widget/chat-widget";
-import { QUESTIONS } from "@/store/match/chat-slice";
+import { GREETING, QUESTIONS } from "@/store/match/chat-slice";
 import { looksSensitive } from "@/features/match/sensitive-data";
 import type { IMatchRequest } from "@/schemas/match-schema";
 
@@ -14,7 +14,7 @@ type User = ReturnType<typeof renderWithProviders>["user"];
 
 async function renderChat() {
   const rendered = renderWithProviders(<ChatWidget />);
-  await rendered.user.click(screen.getByRole("button", { name: "Find a specialist" }));
+  await screen.findByRole("dialog", { name: "Find a specialist" });
   return rendered;
 }
 
@@ -23,66 +23,61 @@ async function sendMessage(user: User, text: string) {
   await user.click(screen.getByRole("button", { name: "Send" }));
 }
 
-async function answerScriptedQuestions(user: User, forChildYouth: "Yes" | "No") {
-  await user.click(screen.getByRole("button", { name: "No preference" }));
-  await user.click(await screen.findByRole("button", { name: forChildYouth }));
+async function answerChildYouth(user: User, answer: "Yes" | "No") {
+  await user.click(screen.getByRole("button", { name: answer }));
   expect(await screen.findByText(QUESTIONS.describe)).toBeInTheDocument();
 }
 
 describe("match chat", () => {
-  it("opens from the floating button and asks for a preferred associate first", async () => {
-    const { user } = renderWithProviders(<ChatWidget />);
-    expect(screen.queryByText(QUESTIONS.associate)).toBeNull();
-    await user.click(screen.getByRole("button", { name: "Find a specialist" }));
+  it("opens by itself and asks the children/youth question first", async () => {
+    await renderChat();
     const dialog = screen.getByRole("dialog", { name: "Find a specialist" });
-    expect(within(dialog).getByText(QUESTIONS.associate)).toBeInTheDocument();
-    expect(within(dialog).getByRole("button", { name: "No preference" })).toBeInTheDocument();
+    expect(within(dialog).getByText(GREETING)).toBeInTheDocument();
+    expect(within(dialog).getByText(QUESTIONS.childYouth)).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "Yes" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "No" })).toBeInTheDocument();
+    expect(within(dialog).queryByLabelText("Message")).toBeNull();
+  });
+
+  it("opens by itself only once per tab", async () => {
+    const { user, unmount } = await renderChat();
+    await user.click(screen.getByRole("button", { name: "Close chat" }));
+    unmount();
+
+    const again = renderWithProviders(<ChatWidget />);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await again.user.click(screen.getByRole("button", { name: "Find a specialist" }));
+    expect(screen.getByRole("dialog", { name: "Find a specialist" })).toBeInTheDocument();
+  });
+
+  it("closes on a backdrop click but not on a click inside", async () => {
+    const { user } = await renderChat();
+    await user.click(screen.getByText(QUESTIONS.childYouth));
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+    await user.click(dialog);
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("keeps the conversation after closing and reopening", async () => {
     const { user } = await renderChat();
-    await user.click(screen.getByRole("button", { name: "No preference" }));
+    await answerChildYouth(user, "No");
     await user.click(screen.getByRole("button", { name: "Close chat" }));
     expect(screen.queryByRole("dialog")).toBeNull();
     await user.click(screen.getByRole("button", { name: "Find a specialist" }));
-    expect(screen.getByText(QUESTIONS.childYouth)).toBeInTheDocument();
-  });
-
-  it("shows the matching associate's links and asks nothing else", async () => {
-    db.specialists[0].bookingUrl = "https://example-clinic.janeapp.com/#/staff_member/1";
-    const { user } = await renderChat();
-    await sendMessage(user, "John");
-    const card = await screen.findByRole("article", { name: "John Whitaker" });
-    const booking = within(card).getByRole("link", { name: "Book on Jane" });
-    expect(booking).toHaveAttribute("href", "https://example-clinic.janeapp.com/#/staff_member/1");
-    expect(booking).toHaveAttribute("target", "_blank");
-    const profile = within(card).getByRole("link", { name: "View profile" });
-    expect(profile).toHaveAttribute("href", "#");
-    expect(profile).not.toHaveAttribute("target");
-    await user.click(profile);
-    expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
-    expect(screen.queryByText(QUESTIONS.childYouth)).toBeNull();
-    expect(screen.queryByLabelText("Message")).toBeNull();
+    expect(screen.getByText(QUESTIONS.describe)).toBeInTheDocument();
   });
 
   it("keeps the input open after a reply, with no start-over quick reply", async () => {
     const { user } = await renderChat();
-    await answerScriptedQuestions(user, "No");
+    await answerChildYouth(user, "No");
     await sendMessage(user, "Work stress");
     expect(await screen.findByText(MOCK_REPLY)).toBeInTheDocument();
     expect(screen.getByLabelText("Message")).toBeEnabled();
     expect(screen.getAllByRole("button", { name: "Start over" })).toHaveLength(1);
   });
 
-  it("moves on to the next question when no associate matches", async () => {
-    const { user } = await renderChat();
-    await sendMessage(user, "Nobody");
-    expect(await screen.findByText(/couldn't find an associate/)).toBeInTheDocument();
-    expect(screen.getByText(QUESTIONS.childYouth)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Yes" })).toBeInTheDocument();
-  });
-
-  it("sends the whole thread with the children/youth answer and shows the cards", async () => {
+  it("sends the whole thread with the children/youth answer", async () => {
     const requests: IMatchRequest[] = [];
     server.use(
       http.post("*/api/match", async ({ request }) => {
@@ -91,7 +86,7 @@ describe("match chat", () => {
       }),
     );
     const { user } = await renderChat();
-    await answerScriptedQuestions(user, "Yes");
+    await answerChildYouth(user, "Yes");
     await sendMessage(user, "My daughter worries a lot");
     expect(await screen.findByText("Reply 1")).toBeInTheDocument();
     await sendMessage(user, "Is in-person possible?");
@@ -107,14 +102,24 @@ describe("match chat", () => {
     });
   });
 
-  it("renders recommended specialists under the reply", async () => {
+  it("renders recommended specialists with real and placeholder links", async () => {
+    db.specialists[1].bookingUrl = "https://example-clinic.janeapp.com/#/staff_member/2";
     const { user } = await renderChat();
-    await answerScriptedQuestions(user, "Yes");
+    await answerChildYouth(user, "Yes");
     await sendMessage(user, "My son can't focus at school");
     expect(await screen.findByText(MOCK_REPLY)).toBeInTheDocument();
     const cards = screen.getByRole("list", { name: "Matching specialists" });
-    expect(within(cards).getByRole("article", { name: "Priya Raman" })).toBeInTheDocument();
     expect(within(cards).queryByRole("article", { name: "John Whitaker" })).toBeNull();
+
+    const card = within(cards).getByRole("article", { name: "Priya Raman" });
+    const booking = within(card).getByRole("link", { name: "Book on Jane" });
+    expect(booking).toHaveAttribute("href", "https://example-clinic.janeapp.com/#/staff_member/2");
+    expect(booking).toHaveAttribute("target", "_blank");
+    const profile = within(card).getByRole("link", { name: "View profile" });
+    expect(profile).toHaveAttribute("href", "#");
+    expect(profile).not.toHaveAttribute("target");
+    await user.click(profile);
+    expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
   });
 
   it("shows an LLM error inline and retries the same message", async () => {
@@ -126,7 +131,7 @@ describe("match chat", () => {
       }),
     );
     const { user } = await renderChat();
-    await answerScriptedQuestions(user, "No");
+    await answerChildYouth(user, "No");
     await sendMessage(user, "Work stress");
     expect(await screen.findByRole("alert")).toHaveTextContent("The assistant is unavailable right now");
 
@@ -137,17 +142,20 @@ describe("match chat", () => {
     expect(calls).toBe(1);
   });
 
-  it("starts over from the first question", async () => {
+  it("starts over from the children/youth question", async () => {
     const { user } = await renderChat();
-    await sendMessage(user, "Priya");
-    await user.click(await screen.findByRole("button", { name: "Start over" }));
+    await answerChildYouth(user, "Yes");
+    await sendMessage(user, "My son can't focus at school");
+    await screen.findByText(MOCK_REPLY);
+    await user.click(screen.getByRole("button", { name: "Start over" }));
     expect(screen.queryByRole("article")).toBeNull();
-    expect(screen.getByText(QUESTIONS.associate)).toBeInTheDocument();
-    expect(screen.getByLabelText("Message")).toBeInTheDocument();
+    expect(screen.queryByText(QUESTIONS.describe)).toBeNull();
+    expect(screen.getByRole("button", { name: "Yes" })).toBeInTheDocument();
   });
 
   it("warns about card-like numbers without blocking", async () => {
     const { user } = await renderChat();
+    await answerChildYouth(user, "No");
     await user.type(screen.getByLabelText("Message"), "my card 4111 1111 1111 1111");
     expect(screen.getByText(/looks like a card or ID number/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();

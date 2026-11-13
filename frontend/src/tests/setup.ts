@@ -18,5 +18,6 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   resetDb();
+  sessionStorage.clear();
 });
 afterAll(() => server.close());

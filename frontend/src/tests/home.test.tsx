@@ -5,7 +5,9 @@ import ChatWidget from "@/app/chat-widget/chat-widget";
 import HomeRoute from "@/app/routes/home/home-route";
 import { QUESTIONS } from "@/store/match/chat-slice";
 
+/** The chat opens by itself once per tab; mark it as already shown so the page starts with it closed. */
 function renderHome() {
+  sessionStorage.setItem("chat-auto-opened", "1");
   return renderWithProviders(
     <>
       <HomeRoute />
@@ -26,14 +28,13 @@ describe("home page", () => {
     const { user } = renderHome();
     const tile = screen.getByRole("article", { name: "Individual" });
     await user.click(within(tile).getByRole("button", { name: "Get started" }));
-    expect(within(screen.getByRole("dialog")).getByText(QUESTIONS.associate)).toBeInTheDocument();
+    expect(within(screen.getByRole("dialog")).getByText(QUESTIONS.childYouth)).toBeInTheDocument();
   });
 
   it("answers the children/youth question from the Children & Teens tile", async () => {
     const { user } = renderHome();
     const tile = screen.getByRole("article", { name: "Children & Teens" });
     await user.click(within(tile).getByRole("button", { name: "Get started" }));
-    await user.click(screen.getByRole("button", { name: "No preference" }));
 
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).getByText(QUESTIONS.childYouth)).toBeInTheDocument();
